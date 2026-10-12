@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JAGR Smart Office POC</title>
+<style>
+:root{--bg:#f3f5f8;--card:#fff;--side:#1f2f45;--sidetx:#b9c5d6;--tx:#1e2a3a;--mu:#6b7889;--bd:#e1e6ed;--ac:#3f6a9e;--acd:#335a88;--acb:#e8eff7;--ok:#2f7d5b;--okb:#e4f2ec;--wn:#a9741b;--wnb:#faf0dc;--er:#b04a3f;--erb:#f8e7e4;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10151c;--card:#182029;--side:#0c1118;--tx:#e6ebf1;--mu:#93a0b0;--bd:#263140;--ac:#6f9bd1;--acd:#86aedf;--acb:#1e2b3b;--ok:#62c395;--okb:#183226;--wn:#e3b055;--wnb:#33290f;--er:#ec8479;--erb:#3a1f1c}}
+:root[data-theme="dark"]{--bg:#10151c;--card:#182029;--side:#0c1118;--tx:#e6ebf1;--mu:#93a0b0;--bd:#263140;--ac:#6f9bd1;--acd:#86aedf;--acb:#1e2b3b;--ok:#62c395;--okb:#183226;--wn:#e3b055;--wnb:#33290f;--er:#ec8479;--erb:#3a1f1c}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.side{position:fixed;left:0;top:env(safe-area-inset-top,0px);bottom:env(safe-area-inset-bottom,0px);width:228px;background:var(--side);color:var(--sidetx);padding:18px 12px;display:flex;flex-direction:column;gap:4px;z-index:5}
+.brand{display:flex;gap:10px;align-items:center;color:#fff;font-weight:700;padding:4px 8px 16px;letter-spacing:.2px}
+.brand .lg{width:32px;height:32px;border-radius:8px;background:var(--ac);display:grid;place-items:center;flex:none}
+.brand small{display:block;font-weight:400;font-size:11px;color:var(--sidetx)}
+.nav{display:flex;gap:12px;align-items:center;border:0;background:transparent;color:var(--sidetx);padding:10px 12px;border-radius:8px;font:inherit;cursor:pointer;text-align:left;width:100%}
+.nav:hover{background:rgba(255,255,255,.07)}
+.nav.on{background:rgba(255,255,255,.12);color:#fff}
+.nav .bd{margin-left:auto;background:var(--ac);color:#fff;font-size:11px;border-radius:99px;padding:0 7px}
+.sfoot{margin-top:auto;font-size:11px;padding:8px}
+.main{margin-left:228px;padding:22px 26px;max-width:1180px}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+h1{font-size:21px;margin:0}.sub{color:var(--mu);font-size:13px}
+h2{font-size:15px;margin:0 0 12px}
+.who{display:flex;align-items:center;gap:8px;color:var(--mu);font-size:13px}
+select,input,textarea{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);font:inherit}
+.who select{width:auto}
+select:focus,input:focus,textarea:focus{outline:2px solid var(--acb);border-color:var(--ac)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:18px;margin-bottom:18px}
+.grid .card{margin:0}
+.kpi{display:flex;justify-content:space-between;align-items:flex-start}
+.kpi b{display:block;font-size:28px;line-height:1.1;margin-top:6px}
+.kpi small{color:var(--mu)}
+.ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--acb);color:var(--ac)}
+.ic.ok{background:var(--okb);color:var(--ok)}.ic.wn{background:var(--wnb);color:var(--wn)}
+.two{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+@media(max-width:900px){.two{grid-template-columns:1fr}}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--mu);text-align:left;padding:8px 12px;border-bottom:1px solid var(--bd);white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid var(--bd);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--bg)}
+.pill{font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px;white-space:nowrap}
+.Pending{background:var(--wnb);color:var(--wn)}.Approved{background:var(--okb);color:var(--ok)}.Rejected{background:var(--erb);color:var(--er)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ac);background:var(--ac);color:#fff;padding:8px 14px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--acd)}
+.btn.sec{background:transparent;color:var(--ac)}.btn.sec:hover{background:var(--acb)}
+.btn.dg{background:transparent;color:var(--er);border-color:var(--er)}.btn.dg:hover{background:var(--erb)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.acts{display:flex;gap:6px}
+code{background:var(--bg);border:1px solid var(--bd);padding:1px 6px;border-radius:6px;font-size:12px;word-break:break-all}
+label{display:block;font-size:12px;font-weight:600;color:var(--mu);margin:14px 0 5px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.row{grid-template-columns:1fr}}
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step span{width:26px;height:26px;border-radius:50%;background:var(--acb);color:var(--ac);display:grid;place-items:center;font-weight:700;font-size:12px;flex:none}
+.step b{display:block}.step small{color:var(--mu)}
+.log{font-size:12px;color:var(--mu)}.log div{padding:2px 0}
+.tree{font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.8}
+.empty{color:var(--mu);text-align:center;padding:28px}
+.note{font-size:12px;color:var(--mu);margin-top:6px}
+@media(max-width:700px){.side{width:60px;padding:14px 8px}.brand div,.nav span,.nav .bd,.sfoot{display:none}.brand{padding:4px 0 14px;justify-content:center}.nav{justify-content:center;padding:10px}.main{margin-left:60px;padding:16px}}
+</style>
+</head>
+<body>
+<aside class="side" id="side"></aside>
+<main class="main">
+  <div class="bar">
+    <div><h1 id="ttl"></h1><div class="sub" id="sub"></div></div>
+    <div class="who">Signed in as <select id="role" onchange="setRole(this.value)"></select></div>
+  </div>
+  <div id="view"></div>
+  <p class="note">Proof of concept. Demo data lives in this page only and resets on reload. A real rollout would use Microsoft/Google Forms, OneDrive/Drive, Teams and e-signature.</p>
+</main>
+
+<script>
+var P={
+ grid:"M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z",
+ plus:"M12 5v14M5 12h14",
+ list:"M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01",
+ check:"M20 6 9 17l-5-5",
+ folder:"M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
+ swap:"M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3",
+ clock:"M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0",
+ file:"M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5",
+ brief:"M3 8h18v12H3zM8 8V5h8v3"
+};
+function ico(n){return '<svg class="i" viewBox="0 0 24 24"><path d="'+P[n]+'"/></svg>'}
+var TYPES={
+ "Leave Request":{dept:"HR",code:"LEAVE",folder:"01_HR",approver:"HR"},
+ "Purchase / Budget Request":{dept:"FIN",code:"BUDGET",folder:"02_FINANCE",approver:"Administrative Manager"},
+ "Document for Signature":{dept:"OPS",code:"DOCSIGN",folder:"03_OPERATIONS",approver:"Administrative Manager"},
+ "Client Document":{dept:"CUS",code:"CLIENT",folder:"04_CUSTOMERS",approver:"Office Administrator"},
+ "Meeting Minutes":{dept:"MTG",code:"MINUTES",folder:"05_MEETINGS",approver:"Office Administrator"}
+};
+var ROLES=["Employee","Office Administrator","Administrative Manager","HR"];
+var role="Employee",page="dash",nextId=4,open={},reqs=[];
+var PAGES={dash:["Dashboard","Overview of office requests and turnaround","grid"],
+ submit:["New Request","Submit a digital request","plus"],
+ track:["Requests","Track every request and its status","list"],
+ queue:["Approvals","Requests waiting for your decision","check"],
+ archive:["Archive","Central filing structure and approved files","folder"],
+ compare:["Before vs After","How the digital workflow changes service delivery","swap"]};
+
+function today(){return new Date().toISOString().slice(0,10)}
+function now(){return new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})}
+function fname(t,d){var x=TYPES[t];return x.dept+"_"+x.code+"_"+d+"_V1.pdf"}
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+function mk(id,type,by,title,det,status,mins){
+ var d=today(),t=TYPES[type];
+ var r={id:id,type:type,by:by,title:title,det:det,status:status,date:d,file:fname(type,d),folder:t.folder,approver:t.approver,mins:null,
+  log:[{t:"Submitted via online form",at:"08:05"},{t:"Registered in "+t.folder,at:"08:05"}]};
+ if(status!=="Pending"){r.mins=mins;r.log.push({t:status+" by "+t.approver,at:"08:17"},{t:"Requester notified; filed",at:"08:17"})}
+ return r}
+reqs=[mk(1,"Leave Request","Fabian, A.","Vacation leave, 2 days","Oct 20-21, coverage arranged.","Approved",12),
+ mk(2,"Purchase / Budget Request","Albino, G.","Printer toner and paper","About PHP 3,500 for the month.","Pending"),
+ mk(3,"Document for Signature","Alcantara, J.","Service agreement, SME client","Final draft attached.","Pending")];
+
+function canAct(r){return role!=="Employee"&&r.status==="Pending"&&(role===r.approver||role==="Administrative Manager")}
+function setRole(r){role=r;if(page==="queue"&&r==="Employee")page="dash";render()}
+function go(p){page=p;render()}
+function tog(id){open[id]=!open[id];render()}
+function decide(id,s){var r=reqs.filter(function(x){return x.id===id})[0];
+ r.status=s;r.mins=Math.floor(Math.random()*9)+1;
+ r.log.push({t:s+" by "+role,at:now()},{t:s==="Approved"?"Requester notified; filed to "+r.folder:"Returned to requester with remarks",at:now()});render()}
+function submitReq(){
+ var v=function(i){return document.getElementById(i).value.trim()},type=v("f_type"),by=v("f_by"),title=v("f_title");
+ if(!by||!title){document.getElementById("err").textContent="Please enter your name and a title.";return}
+ var t=TYPES[type],d=today();
+ reqs.unshift({id:nextId++,type:type,by:by,title:title,det:v("f_det"),status:"Pending",date:d,file:fname(type,d),folder:t.folder,approver:t.approver,mins:null,
+  log:[{t:"Submitted via online form",at:now()},{t:"Registered as "+fname(type,d),at:now()}]});
+ page="track";render()}
+
+function rows(list,withAct){
+ if(!list.length)return '<div class="empty">Nothing to show yet.</div>';
+ return '<div class="tw"><table><thead><tr><th>Request</th><th>Type</th><th>Requester</th><th>Approver</th><th>Status</th><th></th></tr></thead><tbody>'+
+ list.map(function(r){
+  var a='<div class="acts">';
+  if(withAct&&canAct(r))a+='<button class="btn sm" onclick="decide('+r.id+',\'Approved\')">Approve</button><button class="btn sm dg" onclick="decide('+r.id+',\'Rejected\')">Reject</button>';
+  a+='<button class="btn sm sec" onclick="tog('+r.id+')">'+(open[r.id]?"Hide":"Details")+'</button></div>';
+  var h='<tr><td><b>'+esc(r.title)+'</b></td><td>'+esc(r.type)+'</td><td>'+esc(r.by)+'</td><td>'+esc(r.approver)+'</td><td><span class="pill '+r.status+'">'+r.status+'</span></td><td>'+a+'</td></tr>';
+  if(open[r.id])h+='<tr><td colspan="6"><div class="log">'+(r.det?'<div>'+esc(r.det)+'</div>':'')+'<div>File: <code>'+esc(r.file)+'</code> in <code>'+r.folder+'</code></div>'+r.log.map(function(l){return '<div>'+l.at+'  '+esc(l.t)+'</div>'}).join("")+'</div></td></tr>';
+  return h}).join("")+'</tbody></table></div>'}
+
+function render(){
+ var pend=reqs.filter(function(r){return r.status==="Pending"}).length;
+ var keys=["dash","submit","track"];if(role!=="Employee")keys.push("queue");keys.push("archive","compare");
+ document.getElementById("side").innerHTML='<div class="brand"><div class="lg">'+ico("brief")+'</div><div>JAGR Office<small>North Luzon Business Solutions</small></div></div>'+
+  keys.map(function(k){return '<button class="nav '+(k===page?"on":"")+'" onclick="go(\''+k+'\')" title="'+PAGES[k][0]+'">'+ico(PAGES[k][2])+'<span>'+PAGES[k][0]+'</span>'+(k==="queue"&&pend?'<em class="bd" style="font-style:normal">'+pend+'</em>':'')+'</button>'}).join("")+
+  '<div class="sfoot">Group 1 · Corporate Office<br>Smart Office POC</div>';
+ document.getElementById("role").innerHTML=ROLES.map(function(r){return '<option'+(r===role?" selected":"")+'>'+r+'</option>'}).join("");
+ document.getElementById("ttl").textContent=PAGES[page][0];
+ document.getElementById("sub").textContent=PAGES[page][1];
+ var v=document.getElementById("view"),h="";
+
+ if(page==="dash"){
+  var ap=reqs.filter(function(r){return r.status==="Approved"}).length,
+   dn=reqs.filter(function(r){return r.mins!==null}),
+   avg=dn.length?Math.round(dn.reduce(function(s,r){return s+r.mins},0)/dn.length)+" min":"-";
+  h='<div class="grid">'+
+  '<div class="card"><div class="kpi"><div><small>Total requests</small><b>'+reqs.length+'</b></div><div class="ic">'+ico("file")+'</div></div></div>'+
+  '<div class="card"><div class="kpi"><div><small>Pending approval</small><b>'+pend+'</b></div><div class="ic wn">'+ico("clock")+'</div></div></div>'+
+  '<div class="card"><div class="kpi"><div><small>Approved and filed</small><b>'+ap+'</b></div><div class="ic ok">'+ico("check")+'</div></div></div>'+
+  '<div class="card"><div class="kpi"><div><small>Avg. turnaround</small><b>'+avg+'</b></div><div class="ic">'+ico("clock")+'</div></div></div></div>'+
+  '<div class="two"><div class="card"><h2>Recent requests</h2>'+rows(reqs.slice(0,5),false)+'</div>'+
+  '<div class="card"><h2>Digital workflow</h2><div class="steps">'+
+  [["Digital request","Online form replaces paper"],["Cloud registration","Auto-named and filed"],["Review and approval","One-click decision"],["Notify and archive","Access-controlled storage"]].map(function(s,i){return '<div class="step"><span>'+(i+1)+'</span><div><b>'+s[0]+'</b><small>'+s[1]+'</small></div></div>'}).join("")+'</div></div></div>';
+ }
+ if(page==="submit"){
+  h='<div class="card" style="max-width:720px"><div class="row"><div><label>Request type</label><select id="f_type" onchange="prev()">'+Object.keys(TYPES).map(function(k){return '<option>'+k+'</option>'}).join("")+'</select></div>'+
+  '<div><label>Your name</label><input id="f_by" placeholder="e.g., Fabian, A."></div></div>'+
+  '<label>Title</label><input id="f_title" placeholder="Short title">'+
+  '<label>Details</label><textarea id="f_det" rows="3" placeholder="Dates, amounts, purpose"></textarea>'+
+  '<div class="note" id="pv"></div><div id="err" style="color:var(--er);margin-top:8px"></div>'+
+  '<div style="margin-top:16px"><button class="btn" onclick="submitReq()">'+ico("plus")+'Submit request</button></div></div>';
+ }
+ if(page==="track")h='<div class="card">'+rows(reqs,role!=="Employee")+'</div>';
+ if(page==="queue"){var q=reqs.filter(function(r){return r.status==="Pending"});
+  h='<div class="card">'+(q.length?rows(q,true):'<div class="empty">Nothing waiting for approval.</div>')+'<div class="note">Approvers act on requests routed to their role; the Administrative Manager can act on all.</div></div>'}
+ if(page==="archive"){var a=reqs.filter(function(r){return r.status==="Approved"});
+  h='<div class="two"><div class="card"><h2>Approved files</h2>'+(a.length?'<div class="tw"><table><thead><tr><th>File</th><th>Folder</th><th>Requester</th></tr></thead><tbody>'+a.map(function(r){return '<tr><td><code>'+esc(r.file)+'</code></td><td>'+r.folder+'</td><td>'+esc(r.by)+'</td></tr>'}).join("")+'</tbody></table></div>':'<div class="empty">Approve a request to see it archived here.</div>')+'</div>'+
+  '<div class="card"><h2>Filing structure</h2><div class="tree">00_ORGANIZATION<br>├ 01_HR<br>├ 02_FINANCE<br>├ 03_OPERATIONS<br>├ 04_CUSTOMERS<br>├ 05_MEETINGS<br>├ 06_EVENTS<br>└ 07_REPORTS</div><div class="note">[DEPT]_[DOCUMENT_TYPE]_[DATE]_[VERSION]</div></div></div>'}
+ if(page==="compare"){
+  h='<div class="two"><div class="card"><h2>Before</h2><div class="steps">'+["Employee request","Manual follow-up","Waiting too long","Delayed processing","Unanswered concerns"].map(function(s,i){return '<div class="step"><span style="background:var(--erb);color:var(--er)">'+(i+1)+'</span><div><b>'+s+'</b></div></div>'}).join("")+'</div></div>'+
+  '<div class="card"><h2>After</h2><div class="steps">'+["Digital submission","Requirements checked","Assigned to staff","Status updates","Confirmed and completed"].map(function(s,i){return '<div class="step"><span>'+(i+1)+'</span><div><b>'+s+'</b></div></div>'}).join("")+'</div></div></div>'+
+  '<div class="card"><h2>Problems addressed</h2><div class="tw"><table><thead><tr><th>Problem</th><th>How the POC responds</th></tr></thead><tbody>'+
+  [["Paperwork bottlenecks","Online form and one-click approval, no printing"],["Communication noise","One request thread with a timestamped log"],["Leave request delays","Routed straight to HR with status tracking"],["Disorganized files","Auto-naming and filing to the right folder"]].map(function(x){return '<tr><td><b>'+x[0]+'</b></td><td>'+x[1]+'</td></tr>'}).join("")+'</tbody></table></div></div>';
+ }
+ v.innerHTML=h;if(page==="submit")prev();
+}
+function prev(){var s=document.getElementById("f_type");if(!s)return;var t=TYPES[s.value];
+ document.getElementById("pv").innerHTML='Will be filed as <code>'+fname(s.value,today())+'</code> in <code>'+t.folder+'</code> and routed to <b>'+t.approver+'</b>.'}
+render();
+</script>
+</body>
+</html>
